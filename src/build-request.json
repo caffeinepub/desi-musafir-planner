@@ -1,85 +1,36 @@
 {
   "kind": "build_request",
-  "title": "Reset to last working version and enforce Mock Data + WhatsApp dummy number",
-  "priority": "high",
+  "title": "Remove pricing from Recommended Transport gold card and replace bullets with general offerings",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-18",
-      "text": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "The deployment failed because of the safety flag.\n\nPlease RESET the code to the last working version."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Project builds and deploys without triggering a safety-flag failure.",
-        "Core app screen (“Desi Musafir - Goa Planner” landing page with form + results section) still renders after the reset."
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "text": "Ensure the app uses Mock Data (Simulation Mode) so clicking “Plan My Trip” works instantly without calling the backend canister and without backend-related errors.",
+      "id": "REQ-41",
+      "text": "Update the text content rendered inside the \"Recommended Transport\" highlighted gold card so it contains no explicit pricing and uses the exact new bullet lines provided by the user, while keeping the existing WhatsApp CTA button unchanged.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-4"
         ],
         "quotes": [
-          "1. Use \"Mock Data\" (Simulation Mode) so the app works instantly without backend errors."
+          "Remove all mention of ₹1200 or ₹400 prices.\n\nReplace the bullet points with:\n- \"🚗 Private Cars available (Self-drive & Chauffeur).\"\n- \"🛵 Scooters & Bikes available for Couples & Solo Travelers.\"\n- \"✨ Best Market Rates Guaranteed!\"\n- \"✅ 24/7 Roadside Assistance Included.\"\n\nKeep the \"Book Now on WhatsApp\" button as it is."
         ]
       },
       "acceptanceCriteria": [
-        "On a fresh load, Mock Mode is enabled by default.",
-        "When Mock Mode is enabled, clicking “Plan My Trip” does not call the backend and returns the hardcoded sample itinerary.",
-        "No backend/canister errors are shown to the user while Mock Mode is enabled."
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "text": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button links to the dummy number 919999999999 (URL must be exactly `https://wa.me/919999999999`).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "2. For the WhatsApp button, just use this dummy number: 919999999999."
-        ]
-      },
-      "acceptanceCriteria": [
-        "The “Book Now on WhatsApp” button navigates to `https://wa.me/919999999999`.",
-        "No other WhatsApp number is used anywhere in the UI for this CTA."
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "text": "Make sure the “Recommended Transport” highlighted card is visible in the itinerary results when using Mock Data (Simulation Mode) by ensuring the mock itinerary content includes a parsable “Recommended Transport” section and the results renderer displays it.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "3. Make sure the \"Recommended Transport\" card is visible."
-        ]
-      },
-      "acceptanceCriteria": [
-        "After clicking “Plan My Trip” in Mock Mode, the highlighted transport card renders with the title text “⭐ Recommended: Rent from Desi Musafir Rentals”.",
-        "The transport card is shown above the Day-wise Plan section in the results view."
+        "Generating an itinerary (any duration/budget) produces a \"Recommended Transport\" section whose gold card bullet list contains exactly these four lines, in this order: \"🚗 Private Cars available (Self-drive & Chauffeur).\", \"🛵 Scooters & Bikes available for Couples & Solo Travelers.\", \"✨ Best Market Rates Guaranteed!\", \"✅ 24/7 Roadside Assistance Included.\"",
+        "The itinerary output (mock/local generation) contains no occurrences of \"₹1200\" or \"₹400\" anywhere in the Recommended Transport section text.",
+        "The \"Book Now on WhatsApp\" button label, styling, and link behavior remain unchanged and still use the existing WHATSAPP_URL constant.",
+        "The gold card title remains unchanged (\"⭐ Recommended: Rent from Goa Car Rental\")."
       ]
     }
   ],
   "constraints": [
-    "Frontend files under `frontend/src/components/ui` and identity/actor hooks listed as immutable must not be edited directly; compose them instead.",
-    "Respect the single-actor Motoko backend architecture; only add a migration file if state upgrades are required."
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Keep the existing WhatsApp URL source-of-truth constant in frontend/src/constants/whatsapp.ts and do not change the CTA behavior."
   ],
   "nonGoals": [
-    "Implementing real backend itinerary generation or external API integrations.",
-    "Adding new product features beyond restoring deployability and enforcing Mock Data + WhatsApp dummy number behavior."
+    "Do not change hotel or food pricing text in other sections (Hotels / Food Spots).",
+    "Do not change the layout/styling of the Recommended Transport card or the WhatsApp button; only update the transport text content.",
+    "Do not introduce backend/canister calls for itinerary generation."
   ],
   "imageRequirements": {
     "required": [],

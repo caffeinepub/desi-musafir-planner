@@ -1,12 +1,15 @@
 # Specification
 
 ## Summary
-**Goal:** Restore deployability by resetting to the last working code version while keeping the current Goa Planner UI, and enforce Simulation (Mock Data) behavior including a dummy WhatsApp CTA and visible Recommended Transport card.
+**Goal:** Remove explicit pricing from the “Recommended Transport” gold card and update its bullet list to the user-provided general offerings, without changing the existing WhatsApp CTA.
 
 **Planned changes:**
-- Reset/undo recent changes that cause the platform safety-flag deployment failure while preserving the current “Desi Musafir - Goa Planner” landing UI layout and rendering.
-- Enable Mock Data (Simulation Mode) by default and ensure “Plan My Trip” uses the hardcoded sample itinerary without calling the backend/canister.
-- Update the “Book Now on WhatsApp” button to link exactly to `https://wa.me/919999999999` and ensure no other number is used for this CTA.
-- Update mock itinerary content and/or results rendering so a parsable “Recommended Transport” section appears as a highlighted card above the Day-wise Plan, titled “⭐ Recommended: Rent from Desi Musafir Rentals”.
+- Update the “Recommended Transport” highlighted gold card text to remove any mention of “₹1200” and “₹400”.
+- Replace the gold card bullet list with exactly these four lines, in order:
+  - "🚗 Private Cars available (Self-drive & Chauffeur)."
+  - "🛵 Scooters & Bikes available for Couples & Solo Travelers."
+  - "✨ Best Market Rates Guaranteed!"
+  - "✅ 24/7 Roadside Assistance Included."
+- Keep the gold card title (“⭐ Recommended: Rent from Goa Car Rental”) and the “Book Now on WhatsApp” button unchanged (label, styling, and link behavior via the existing WHATSAPP_URL constant).
 
-**User-visible outcome:** The app deploys successfully; users can load the Goa Planner, click “Plan My Trip” and instantly see a mock itinerary without backend errors, with a visible Recommended Transport card, and the WhatsApp booking button opens the dummy number link.
+**User-visible outcome:** Generated itineraries show a “Recommended Transport” section whose highlighted gold card no longer displays prices and instead lists the updated transport offerings, while the WhatsApp booking button works exactly as before.

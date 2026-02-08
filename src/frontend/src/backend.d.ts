@@ -9,12 +9,9 @@ export interface None {
 export type Option<T> = Some<T> | None;
 export interface TripForm {
     duration: bigint;
-    travelType: string;
-    numPersons: bigint;
-    useRental: boolean;
-    budget: bigint;
+    groupSize: bigint;
     location: string;
 }
 export interface backendInterface {
-    planTrip(form: TripForm): Promise<string>;
+    createItinerary(form: TripForm): Promise<string>;
 }

@@ -10,15 +10,12 @@ import { IDL } from '@icp-sdk/core/candid';
 
 export const TripForm = IDL.Record({
   'duration' : IDL.Nat,
-  'travelType' : IDL.Text,
-  'numPersons' : IDL.Nat,
-  'useRental' : IDL.Bool,
-  'budget' : IDL.Nat,
+  'groupSize' : IDL.Nat,
   'location' : IDL.Text,
 });
 
 export const idlService = IDL.Service({
-  'planTrip' : IDL.Func([TripForm], [IDL.Text], []),
+  'createItinerary' : IDL.Func([TripForm], [IDL.Text], []),
 });
 
 export const idlInitArgs = [];
@@ -26,14 +23,13 @@ export const idlInitArgs = [];
 export const idlFactory = ({ IDL }) => {
   const TripForm = IDL.Record({
     'duration' : IDL.Nat,
-    'travelType' : IDL.Text,
-    'numPersons' : IDL.Nat,
-    'useRental' : IDL.Bool,
-    'budget' : IDL.Nat,
+    'groupSize' : IDL.Nat,
     'location' : IDL.Text,
   });
   
-  return IDL.Service({ 'planTrip' : IDL.Func([TripForm], [IDL.Text], []) });
+  return IDL.Service({
+    'createItinerary' : IDL.Func([TripForm], [IDL.Text], []),
+  });
 };
 
 export const init = ({ IDL }) => { return []; };

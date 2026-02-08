@@ -91,28 +91,25 @@ export class ExternalBlob {
 }
 export interface TripForm {
     duration: bigint;
-    travelType: string;
-    numPersons: bigint;
-    useRental: boolean;
-    budget: bigint;
+    groupSize: bigint;
     location: string;
 }
 export interface backendInterface {
-    planTrip(form: TripForm): Promise<string>;
+    createItinerary(form: TripForm): Promise<string>;
 }
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async planTrip(arg0: TripForm): Promise<string> {
+    async createItinerary(arg0: TripForm): Promise<string> {
         if (this.processError) {
             try {
-                const result = await this.actor.planTrip(arg0);
+                const result = await this.actor.createItinerary(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.planTrip(arg0);
+            const result = await this.actor.createItinerary(arg0);
             return result;
         }
     }

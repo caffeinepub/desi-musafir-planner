@@ -12,13 +12,12 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface TripForm {
   'duration' : bigint,
-  'travelType' : string,
-  'numPersons' : bigint,
-  'useRental' : boolean,
-  'budget' : bigint,
+  'groupSize' : bigint,
   'location' : string,
 }
-export interface _SERVICE { 'planTrip' : ActorMethod<[TripForm], string> }
+export interface _SERVICE {
+  'createItinerary' : ActorMethod<[TripForm], string>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

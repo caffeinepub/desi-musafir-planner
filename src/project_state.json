@@ -1,19 +1,30 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
-  "summary": "Build a modern, mobile-responsive web UI for the Desi Musafir Planner (Goa) and support a Mock/Simulation Mode that stops calling the real backend when it’s down, using hardcoded dummy itinerary data to immediately render a full 3-day sample result (transport card + WhatsApp CTA, emoji timeline, and food-spot tags) for UI verification. Use WhatsApp dummy number 919999999999 for the CTA link.",
+  "projectStateVersion": 25,
+  "summary": "Rebrand the web UI as “Goa Car Rental” with tagline “Best Bike & Car Rental in Goa + Free Travel Planner”, keep Mock/Simulation Mode available but DISABLED by default (no warning banner), and refactor “Plan My Trip” to use permanent Advanced Local Logic (smart mock data) fully inside the frontend (JavaScript) with NO backend/canister calls so it never crashes; ensure duration slicing works correctly (1 Day vs 3/5 Days), budget-specific hotel/food recommendations render from local Low/Medium/High datasets, and keep the WhatsApp CTA in the “Recommended Transport” card pointing to the real number (constructed via string concatenation) with prefilled text “I want to rent a car in Goa”.",
   "architectural_notes": [
     "Implement as a standalone HTML/CSS/JS page (no framework required) with responsive layout and a dedicated results section for rendering itinerary output.",
     "Replace simulated placeholder output with a real itinerary generation call (OpenAI API) or a deterministic mock; parse/structure the response to render day-wise plan, food spots, and “Recommended Transport (Desi Musafir Rentals)” in the results section.",
     "Enhance results rendering to be more app-like: transport as a highlighted gold/yellow bordered card with title \"⭐ Recommended: Rent from Desi Musafir Rentals\" and a green CTA button \"Book Now on WhatsApp\" (placeholder link https://wa.me/919999999999); itinerary as a day-wise timeline using emojis for Morning/Afternoon/Evening; food spots as clickable tags/chips.",
     "Support a Mock/Simulation Mode that bypasses the Internet Computer backend/API calls and returns hardcoded sample itinerary data on “Plan My Trip” for UI testing when the canister is down.",
-    "WhatsApp CTA: use dummy number 919999999999 (wa.me/919999999999) for the \"Book Now on WhatsApp\" button; ensure the \"⭐ Recommended: Rent from Desi Musafir Rentals\" transport card is visibly rendered in results when using Mock Data."
+    "Rebrand UI text: app name/title must be “Goa Car Rental” and tagline must be exactly “Best Bike & Car Rental in Goa + Free Travel Planner”.",
+    "Mock-mode itinerary rendering must be dynamic based on selected Duration: display only Day 1..N from the mock itinerary (not a static always-3-day output).",
+    "WhatsApp CTA must link to the real number constructed via string concatenation in code (const number = \"91\" + \"7861015148\";) and open https://wa.me/${number}?text=I want to rent a car in Goa.",
+    "Mock/Simulation Mode must be available but OFF by default; real OpenAI API path is the default behavior for production builds.",
+    "Remove the “Simulation Mode Active” banner entirely; Mock Mode should not show a persistent warning banner.",
+    "Fix `generatePlan` mock itinerary generation: maintain a hardcoded array of 7 unique day plans (Day 1..Day 7) and strictly slice/filter to the selected Duration (e.g., 1 -> Day 1 only; 3 -> Day 1-3; 5 -> Day 1-5), never rendering extra days."
   ],
   "known_issues": [
     "Current UI only displays a simulated placeholder message (“backend will soon generate...”) instead of a real, detailed itinerary.",
     "Results section content currently feels too simple/static; transport, itinerary, and food spots need more interactive, professional UI components (highlighted transport card + WhatsApp CTA, timeline, and clickable chips).",
     "Backend canister may be stopped (“Canister stopped” error), causing the current Plan My Trip flow to fail; need a mock/static-data fallback mode to verify UI without backend availability.",
-    "Deployment is currently failing due to a safety flag; user requested resetting code to the last working version and rebuilding."
+    "Deployment is currently failing due to a safety flag; user requested resetting code to the last working version and rebuilding.",
+    "Branding still shows “Desi Musafir”; must be changed to “Goa Car Rental” and tagline updated.",
+    "Mock-mode plan output is currently static; must be filtered/rendered based on the user-selected Duration.",
+    "WhatsApp CTA still points to a placeholder/dummy number; must open WhatsApp to the real number using concatenated string construction and prefilled message.",
+    "Mock Mode toggle is currently ON by default; should be OFF on initial load.",
+    "“Simulation Mode Active” warning banner is still visible; must be removed.",
+    "App is not currently forcing the real OpenAI API itinerary generation logic as requested for the real deployment."
   ],
   "isFixRequest": true,
   "existing_features": [
@@ -168,6 +179,150 @@
         "REQ-21"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-rebrand-all-user-facing-app-naming-from-desi-musafir-to-goa-car-rental-including-updating-the-main-header-title-and-the-tagline-text-to-exactly-best-bike-car-rental-in-goa-free-travel-planner-also-update-the-html-document-title-to-reflect-the-new-brand-remove-desi-musafir",
+      "title": "Rebrand all user-facing app naming from “Desi Musafir” to “Goa Car Rental”, including updating the main header title and the tagline text to exactly: “Best Bike & Car Rental in Goa + Free Travel Planner”. Also update the HTML document title to reflect the new brand (remove “Desi Musafir”).",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-mock-simulation-itinerary-logic-so-the-displayed-itinerary-is-not-static-generate-return-itinerary-content-based-on-the-user-selected-duration-specifically-when-duration-is-n-days-the-returned-visible-day-wise-plan-must-include-only-day-1-day-n-e-g-1-day-shows-only-day-1-3-days-shows-day-1-day-3-you-may-use-the-existing-mock-sample-itinerary-as-the-source-and-filter-slice-it-to-the-requested-number-of-days",
+      "title": "Fix mock/simulation itinerary logic so the displayed itinerary is not static: generate/return itinerary content based on the user-selected Duration. Specifically, when Duration is N days, the returned/visible Day-wise Plan must include only Day 1..Day N (e.g., 1 Day shows only Day 1; 3 Days shows Day 1–Day 3). You may use the existing mock sample itinerary as the source and filter/slice it to the requested number of days.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-whatsapp-cta-so-the-book-now-on-whatsapp-button-opens-whatsapp-to-the-real-number-constructed-in-code-exactly-as-const-number-91-7861015148-and-uses-the-link-format-exactly-https-wa-me-number-text-i-want-to-rent-a-car-in-goa-ensure-the-cta-uses-this-updated-url-source-of-truth-so-the-button-navigates-correctly",
+      "title": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button opens WhatsApp to the real number constructed in code exactly as: `const number = \"91\" + \"7861015148\";` and uses the link format exactly: `https://wa.me/${number}?text=I want to rent a car in Goa`. Ensure the CTA uses this updated URL source-of-truth so the button navigates correctly.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-set-mock-mode-to-be-disabled-by-default-on-initial-load-so-the-app-uses-the-real-trip-planning-flow-unless-the-user-explicitly-enables-mock-mode",
+      "title": "Set Mock Mode to be disabled by default on initial load, so the app uses the real trip-planning flow unless the user explicitly enables Mock Mode.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-simulation-mode-active-warning-banner-from-the-landing-page-ui-so-it-is-never-shown",
+      "title": "Remove the \"Simulation Mode Active\" warning banner from the Landing Page UI so it is never shown.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-mock-mode-generateplan-logic-so-the-returned-itinerary-is-not-static-and-strictly-matches-the-user-selected-duration-create-a-hardcoded-in-code-list-of-7-unique-day-plans-day-1-day-7-where-each-day-has-distinct-content-e-g-day-1-north-goa-day-2-south-goa-day-3-dudhsagar-etc-read-the-user-s-selected-duration-from-the-trip-form-input-duration-dropdown-if-duration-1-return-only-day-1-if-duration-3-return-only-day-1-day-3-if-duration-5-return-only-day-1-day-5-strictly-filter-slice-the-7-day-list-by-the-selected-number-of-days-and-do-not-include-any-extra-days-the-generated-itinerary-must-remain-compatible-with-the-existing-itineraryresults-parser-by-keeping-the-same-section-structure-and-day-line-patterns-e-g-a-day-wise-plan-section-with-lines-beginning-with-day-n-plus-food-spots-and-recommended-transport-sections",
+      "title": "Fix the mock-mode \"generatePlan\" logic so the returned itinerary is not static and strictly matches the user-selected Duration.\n\n- Create a hardcoded in-code list of 7 unique day plans (Day 1..Day 7), where each day has distinct content (e.g., Day 1: North Goa, Day 2: South Goa, Day 3: Dudhsagar, etc.).\n- Read the user’s selected Duration from the trip form input (Duration dropdown).\n- If Duration = 1, return ONLY Day 1.\n- If Duration = 3, return ONLY Day 1–Day 3.\n- If Duration = 5, return ONLY Day 1–Day 5.\n- Strictly filter/slice the 7-day list by the selected number of days and do not include any extra days.\n- The generated itinerary must remain compatible with the existing `ItineraryResults` parser by keeping the same section structure and day line patterns (e.g., a \"Day-wise Plan\" section with lines beginning with \"Day N:\", plus \"Food Spots\" and \"Recommended Transport\" sections).",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-mock-itinerary-generation-logic-the-generateplan-function-used-by-mock-mode-to-return-3-distinct-itinerary-datasets-based-on-the-user-selected-budget-low-medium-high-so-low-and-high-plans-do-not-look-the-same",
+      "title": "Update the mock itinerary generation logic (the `generatePlan` function used by Mock Mode) to return 3 DISTINCT itinerary datasets based on the user-selected `budget` (Low / Medium / High), so Low and High plans do not look the same.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-budget-aware-mock-itinerary-output-preserves-the-existing-section-structure-expected-by-itineraryresults-parsing-a-day-wise-plan-section-with-day-n-lines-a-food-spots-section-and-a-recommended-transport-section-and-still-strictly-matches-the-user-selected-duration-only-day-1-day-n-are-included",
+      "title": "Ensure the budget-aware mock itinerary output preserves the existing section structure expected by `ItineraryResults` parsing (a Day-wise Plan section with `Day N:` lines, a Food Spots section, and a Recommended Transport section), and still strictly matches the user-selected `duration` (only Day 1..Day N are included).",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-keep-the-recommended-transport-goa-car-rental-highlighted-card-visible-for-all-budgets-by-ensuring-every-budget-specific-mock-dataset-includes-a-parsable-recommended-transport-section-containing-the-line-recommended-rent-from-goa-car-rental-and-at-least-one-bullet-item-line-beneath-it",
+      "title": "Keep the \"Recommended Transport\" (Goa Car Rental) highlighted card visible for ALL budgets by ensuring every budget-specific mock dataset includes a parsable \"***Recommended Transport***\" section containing the line \"⭐ Recommended: Rent from Goa Car Rental\" and at least one bullet/item line beneath it.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refactor-the-plan-my-trip-flow-to-run-100-locally-in-the-frontend-and-never-call-the-backend-canister-actor-no-api-calls-so-the-app-cannot-crash-due-to-canister-stopped",
+      "title": "Refactor the “Plan My Trip” flow to run 100% locally in the frontend and NEVER call the backend canister/actor (no API calls), so the app cannot crash due to “Canister stopped”.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-backend-mode-switching-mutations-in-the-landing-page-with-a-single-local-only-itinerary-generation-path-react-query-mutation-is-allowed-but-must-only-call-local-generator-functions-remove-or-disable-any-ui-toggles-that-imply-real-backend-execution-for-trip-planning",
+      "title": "Replace the current backend/mode-switching mutations in the landing page with a single local-only itinerary generation path (React Query mutation is allowed but must only call local generator functions). Remove or disable any UI toggles that imply real backend execution for trip planning.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-advanced-local-logic-datasets-in-the-frontend-a-a-complete-5-day-itinerary-day-plan-list-day-1-day-5-with-distinct-content-per-day-and-b-three-budget-specific-recommendation-datasets-low-medium-high-that-include-both-hotel-recommendations-and-food-recommendations",
+      "title": "Implement “Advanced Local Logic” datasets in the frontend: (a) a complete 5-day itinerary day-plan list (Day 1..Day 5) with distinct content per day, and (b) three budget-specific recommendation datasets (Low/Medium/High) that include BOTH hotel recommendations and food recommendations.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-local-itinerary-generator-to-apply-smart-slicing-logic-by-duration-when-duration-is-n-days-include-only-day-1-day-n-in-the-rendered-day-wise-plan-output-e-g-1-day-shows-only-day-1-3-days-shows-only-day-1-day-3-5-days-shows-only-day-1-day-5",
+      "title": "Update the local itinerary generator to apply smart slicing logic by Duration: when Duration is N days, include ONLY Day 1..Day N in the rendered “Day-wise Plan” output (e.g., 1 Day shows only Day 1; 3 Days shows only Day 1–Day 3; 5 Days shows only Day 1–Day 5).",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-local-itinerary-generator-to-apply-budget-switching-logic-when-budget-is-low-medium-high-render-the-matching-budget-s-hotel-and-food-recommendations-e-g-low-shows-low-hotels-high-shows-luxury-hotels",
+      "title": "Update the local itinerary generator to apply Budget switching logic: when Budget is Low/Medium/High, render the matching budget’s hotel and food recommendations (e.g., Low shows Low hotels; High shows luxury hotels).",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-itinerary-text-format-and-results-parser-ui-to-support-and-display-hotel-recommendations-as-a-dedicated-section-in-english-in-addition-to-food-spots-while-keeping-compatibility-with-the-existing-day-wise-plan-food-spots-and-recommended-transport-parsing-sections",
+      "title": "Extend the itinerary text format and results parser/UI to support and display hotel recommendations as a dedicated section in English (in addition to Food Spots), while keeping compatibility with the existing “Day-wise Plan”, “Food Spots”, and “Recommended Transport” parsing/sections.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-recommended-transport-highlighted-card-remains-visible-at-the-bottom-of-the-itinerary-results-for-all-generated-itineraries-and-budgets-using-the-existing-whatsapp-url-source-of-truth-constant",
+      "title": "Ensure the “Recommended Transport” highlighted card remains visible at the bottom of the itinerary results for ALL generated itineraries and budgets, using the existing WhatsApp URL source-of-truth constant.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-align-the-duration-dropdown-options-with-the-new-5-day-local-dataset-so-users-cannot-select-durations-beyond-the-locally-supported-range",
+      "title": "Align the Duration dropdown options with the new 5-day local dataset so users cannot select durations beyond the locally supported range.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-text-content-rendered-inside-the-recommended-transport-highlighted-gold-card-so-it-contains-no-explicit-pricing-and-uses-the-exact-new-bullet-lines-provided-by-the-user-while-keeping-the-existing-whatsapp-cta-button-unchanged",
+      "title": "Update the text content rendered inside the \"Recommended Transport\" highlighted gold card so it contains no explicit pricing and uses the exact new bullet lines provided by the user, while keeping the existing WhatsApp CTA button unchanged.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -210,9 +365,79 @@
       "summary": "Add a Mock/Simulation Mode that disables real backend/API calls and uses hardcoded dummy data on “Plan My Trip” to immediately render a sample 3-day itinerary (with emojis), the highlighted “Recommended Transport (Desi Musafir Rentals)” card + WhatsApp button, and food spots as tags, to avoid canister-down crashes while verifying UI.",
       "reqIds": [],
       "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Rebrand the app UI: change app name/main title from “Desi Musafir” to “Goa Car Rental” and update the tagline to “Best Bike & Car Rental in Goa + Free Travel Planner”.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Fix mock/simulation itinerary logic so results are not static: filter/render only the number of days selected in the Duration dropdown (e.g., 1 Day shows only Day 1; 3 Days shows Day 1–Day 3).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update the WhatsApp CTA button to open WhatsApp to the real number built in code as: const number = \"91\" + \"7861015148\"; and link to https://wa.me/${number}?text=I want to rent a car in Goa.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Disable Mock/Simulation Mode by default (toggle OFF on load) and ensure the app uses real generation logic unless the user explicitly enables Mock Mode.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Remove the “Simulation Mode Active” warning banner from the UI.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Force the Plan My Trip flow to use the real OpenAI API logic (no mock fallback) when deploying the real version.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Ensure the real itinerary generation path returns a well-formatted, parsable itinerary whose Day-wise Plan contains exactly N days when Duration = N (e.g., 1 Day shows only Day 1; 5 Days shows Day 1–Day 5).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Update the backend itinerary text formatting so it renders cleanly in the existing frontend results parser and UI (Day-wise timeline, Food Spots chips, and the highlighted Recommended Transport card).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Update `generatePlan` to use 3 DISTINCT itinerary datasets based on Budget (Low/Medium/High) with specified accommodation/food/activities content, while keeping the “Recommended Transport (Goa Car Rental)” card visible for all budgets.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Implement “Advanced Local Logic” (Smart Mock Data) in the frontend so Plan My Trip never calls the backend/canister/API: use a local 5-day itinerary array + local Low/Medium/High hotel/food recommendation datasets; slice itinerary by selected Duration and switch recommendations by selected Budget; always show the “Recommended Transport (Goa Car Rental)” card with the WhatsApp CTA at the bottom.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Update the “Recommended Transport” gold highlighted card content to remove any explicit pricing (e.g., ₹1200/₹400) and replace bullets with general offerings: 🚗 Private Cars (Self-drive & Chauffeur), 🛵 Scooters & Bikes for Couples & Solo Travelers, ✨ Best Market Rates Guaranteed, ✅ 24/7 Roadside Assistance Included; keep the “Book Now on WhatsApp” button unchanged.",
+      "reqIds": [],
+      "status": "pending"
     }
   ],
-  "projectName": "Desi Musafir Planner",
+  "projectName": "Goa Car Rental",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

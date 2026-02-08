@@ -1,106 +1,112 @@
 import List "mo:core/List";
-import Array "mo:core/Array";
 import Text "mo:core/Text";
+import Nat "mo:core/Nat";
+
+
 
 actor {
   public type DayPlan = {
     day : Nat;
-    activities : [Text];
+    morningActivities : [Text];
+    afternoonActivities : [Text];
+    eveningActivities : [Text];
     accommodation : Text;
   };
 
   public type FoodSpot = {
-    restaurantName : Text;
-    location : Text;
+    name : Text;
+    description : Text;
   };
 
   public type Itinerary = {
     id : Nat;
-    days : [DayPlan];
-    foodSpots : [FoodSpot];
+    days : List.List<DayPlan>;
+    foodSpots : List.List<FoodSpot>;
+    transport : Text;
   };
 
   public type TripForm = {
     duration : Nat;
-    budget : Nat;
-    travelType : Text;
     location : Text;
-    numPersons : Nat;
-    useRental : Bool;
+    groupSize : Nat;
   };
 
-  public type Trip = {
-    form : TripForm;
-    id : Nat;
-    itinerary : ?Itinerary;
-  };
+  var itineraryCounter = 0;
 
-  var itineraryId = 0;
-  var tripId = 0;
-
-  func generateDaysList(duration : Nat, location : Text) : List.List<DayPlan> {
-    let days = List.empty<DayPlan>();
-    for (i in Nat.range(1, duration + 1)) {
-      let activities = ["Sightseeing in " # location, "Local shopping", "Cultural tour"];
-      let dayPlan : DayPlan = {
-        day = i;
-        activities = activities;
-        accommodation = "Hotel " # location # " - Day " # i.toText();
-      };
-      days.add(dayPlan);
+  func createDayPlan(dayNumber : Nat, location : Text) : DayPlan {
+    {
+      day = dayNumber;
+      morningActivities = ["Sightseeing at landmark " # location];
+      afternoonActivities = ["Local experience"];
+      eveningActivities = ["Cultural activity"];
+      accommodation = "Hotel - Day " # dayNumber.toText();
     };
-    days;
   };
 
-  func generateFoodList(location : Text) : List.List<FoodSpot> {
+  func getFoodSpots() : List.List<FoodSpot> {
     let foodSpots = List.empty<FoodSpot>();
     foodSpots.add({
-      restaurantName = "Desi Diner";
-      location;
+      name = "Desi Diner";
+      description = "Authentic local cuisine.";
     });
     foodSpots.add({
-      restaurantName = "Local Tastes";
-      location = location # " Center";
+      name = "Urban Eatery";
+      description = "Modern fusion dishes.";
     });
     foodSpots;
   };
 
-  public shared ({ caller }) func planTrip(form : TripForm) : async Text {
-    itineraryId += 1;
-    let daysList = generateDaysList(form.duration, form.location);
-    let foodList = generateFoodList(form.location);
+  public shared ({ caller }) func createItinerary(form : TripForm) : async Text {
+    itineraryCounter += 1;
+
+    let days = List.empty<DayPlan>();
+    for (i in Nat.range(1, form.duration + 1)) {
+      days.add(createDayPlan(i, form.location));
+    };
 
     let itinerary : Itinerary = {
-      id = itineraryId;
-      days = daysList.toArray();
-      foodSpots = foodList.toArray();
+      id = itineraryCounter;
+      days;
+      foodSpots = getFoodSpots();
+      transport = "Private vehicle included.";
     };
 
-    tripId += 1;
-    let trip : Trip = {
-      form;
-      id = tripId;
-      itinerary = ?itinerary;
+    formatItinerary(itinerary);
+  };
+
+  func formatItinerary(itinerary : Itinerary) : Text {
+    let topSection = "***Itinerary Details*** (Mock Data)\n";
+    let dayPlanSection = "***Day-wise Plan***\n" # formatDayPlans(itinerary.days);
+    let foodSection = "***Food Spots***\n" # formatFoodSpots(itinerary.foodSpots);
+    let transportSection = "***Transport Recommendations***\n" # itinerary.transport;
+    topSection # dayPlanSection # foodSection # transportSection;
+  };
+
+  func formatDayPlans(days : List.List<DayPlan>) : Text {
+    var result = "";
+    for (dayPlan in days.values()) {
+      result #= formatSingleDay(dayPlan);
     };
-
-    let tripDetails = "
-***Itinerary Details (Mock for: " # form.location # ")***
-
-***Day-wise Plan***" # concatDayPlans(itinerary.days) #
-      "\n***Food Spots***\n" # concatFoodSpots(itinerary.foodSpots) #
-      "\n***Recommended Transport (Desi Musafir Rentals)***\n" # transportDetails();
-    tripDetails;
+    result;
   };
 
-  func concatDayPlans(days : [DayPlan]) : Text {
-    days.foldLeft("", func(acc, day) { acc # "\tDay " # day.day.toText() # ": " });
+  func formatSingleDay(dayPlan : DayPlan) : Text {
+    let morning = "\tMorning: " # formatActivities(dayPlan.morningActivities);
+    let afternoon = "\tAfternoon: " # formatActivities(dayPlan.afternoonActivities);
+    let evening = "\tEvening: " # formatActivities(dayPlan.eveningActivities);
+    let hotel = "\tHotel: " # dayPlan.accommodation;
+    "Day " # dayPlan.day.toText() # ":\n" # morning # "\n" # afternoon # "\n" # evening # "\n" # hotel # "\n\n";
   };
 
-  func concatFoodSpots(spots : [FoodSpot]) : Text {
-    spots.foldLeft("", func(acc, spot) { acc # "\t" # spot.restaurantName });
+  func formatActivities(_activities : [Text]) : Text {
+    "Not yet implemented";
   };
 
-  func transportDetails() : Text {
-    "\t- Private vehicles available on request.\n\t- Shared transport recommended for groups of 4 or more.\n";
+  func formatFoodSpots(foodSpots : List.List<FoodSpot>) : Text {
+    var result = "";
+    for (foodSpot in foodSpots.values()) {
+      result #= "\t" # foodSpot.name # ": " # foodSpot.description # "\n";
+    };
+    result;
   };
 };

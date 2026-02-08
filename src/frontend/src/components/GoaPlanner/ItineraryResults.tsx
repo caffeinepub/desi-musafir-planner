@@ -3,7 +3,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import { AlertCircle, MapPinned, Sparkles, UtensilsCrossed, Car } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle, MapPinned, Sparkles, UtensilsCrossed, Car, Hotel } from 'lucide-react';
 import { WHATSAPP_URL } from '../../constants/whatsapp';
 
 type ItineraryResultsProps = {
@@ -16,6 +17,7 @@ type ItineraryResultsProps = {
 
 type ParsedItinerary = {
   days: { title: string; content: string[] }[];
+  hotels: string[];
   foodSpots: string[];
   transport: string[];
 };
@@ -25,11 +27,12 @@ function parseItinerary(data: string): ParsedItinerary {
   
   const result: ParsedItinerary = {
     days: [],
+    hotels: [],
     foodSpots: [],
     transport: [],
   };
 
-  let currentSection: 'days' | 'food' | 'transport' | null = null;
+  let currentSection: 'days' | 'hotels' | 'food' | 'transport' | null = null;
   let currentDay: { title: string; content: string[] } | null = null;
 
   for (const line of lines) {
@@ -37,12 +40,15 @@ function parseItinerary(data: string): ParsedItinerary {
     if (line.includes('Day-wise Plan') || line.includes('Day-Wise Plan')) {
       currentSection = 'days';
       continue;
-    } else if (line.includes('Food Spots')) {
-      currentSection = 'food';
+    } else if (line.includes('***Hotels***')) {
+      currentSection = 'hotels';
       if (currentDay) {
         result.days.push(currentDay);
         currentDay = null;
       }
+      continue;
+    } else if (line.includes('Food Spots')) {
+      currentSection = 'food';
       continue;
     } else if (line.includes('Recommended Transport')) {
       currentSection = 'transport';
@@ -70,6 +76,8 @@ function parseItinerary(data: string): ParsedItinerary {
       } else if (currentDay && line) {
         currentDay.content.push(line);
       }
+    } else if (currentSection === 'hotels' && line) {
+      result.hotels.push(line);
     } else if (currentSection === 'food' && line) {
       result.foodSpots.push(line);
     } else if (currentSection === 'transport' && line) {
@@ -148,13 +156,13 @@ export function ItineraryResults({ isLoading, isError, error, data, isSuccess }:
           <CardDescription>Here's your personalized day-by-day plan</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Transport Section - Highlighted Card */}
+          {/* Transport Section - Highlighted Card (Always at Top) */}
           {parsed.transport.length > 0 && (
             <Card className="border-2 border-yellow-500 bg-yellow-50/50 dark:bg-yellow-950/20 shadow-md">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Car className="h-5 w-5 text-yellow-600" />
-                  ⭐ Recommended: Rent from Desi Musafir Rentals
+                  ⭐ Recommended: Rent from Goa Car Rental
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -210,16 +218,12 @@ export function ItineraryResults({ isLoading, isError, error, data, isSuccess }:
                             return (
                               <div key={lineIndex} className="flex items-start gap-2">
                                 {emoji && <span className="text-lg">{emoji}</span>}
-                                <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                                  {text}
-                                </p>
+                                <p className="text-sm text-foreground/80 leading-relaxed">{text}</p>
                               </div>
                             );
                           })
                         ) : (
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            Activities and sightseeing planned for this day.
-                          </p>
+                          <p className="text-sm text-muted-foreground italic">No activities planned</p>
                         )}
                       </div>
                     </div>
@@ -231,34 +235,45 @@ export function ItineraryResults({ isLoading, isError, error, data, isSuccess }:
 
           <Separator />
 
-          {/* Food Spots - Clickable Chips */}
-          {parsed.foodSpots.length > 0 && (
-            <div className="space-y-3">
+          {/* Hotels Section */}
+          {parsed.hotels.length > 0 && (
+            <div className="space-y-4">
               <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                <UtensilsCrossed className="h-5 w-5 text-coral-600" />
-                Food Spots
+                <Hotel className="h-5 w-5 text-teal-600" />
+                Recommended Hotels
               </h3>
-              <div className="flex flex-wrap gap-2">
-                {parsed.foodSpots.map((spot, index) => (
-                  <button
-                    key={index}
-                    className="px-4 py-2 rounded-full bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-200 text-sm font-medium border border-teal-300 dark:border-teal-700 hover:bg-teal-200 dark:hover:bg-teal-900/50 hover:border-teal-400 dark:hover:border-teal-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2"
-                  >
-                    {spot}
-                  </button>
+              <div className="grid gap-3">
+                {parsed.hotels.map((hotel, index) => (
+                  <Card key={index} className="border-teal-200 dark:border-teal-800 bg-teal-50/30 dark:bg-teal-950/20">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-foreground/90 leading-relaxed">{hotel}</p>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Fallback if parsing didn't work well */}
-          {parsed.days.length === 0 && parsed.foodSpots.length === 0 && parsed.transport.length === 0 && (
-            <div className="prose prose-sm max-w-none space-y-3 text-muted-foreground">
-              {data.split('\n').filter(line => line.trim()).map((line, index) => (
-                <p key={index} className="leading-relaxed">
-                  {line}
-                </p>
-              ))}
+          <Separator />
+
+          {/* Food Spots - Chip Style */}
+          {parsed.foodSpots.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <UtensilsCrossed className="h-5 w-5 text-coral-600" />
+                Must-Try Food Spots
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {parsed.foodSpots.map((spot, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="secondary" 
+                    className="px-3 py-2 text-sm bg-coral-100 dark:bg-coral-900/30 text-coral-800 dark:text-coral-200 hover:bg-coral-200 dark:hover:bg-coral-900/50 transition-colors"
+                  >
+                    {spot}
+                  </Badge>
+                ))}
+              </div>
             </div>
           )}
         </CardContent>
@@ -266,16 +281,6 @@ export function ItineraryResults({ isLoading, isError, error, data, isSuccess }:
     );
   }
 
-  // Empty state (no trip planned yet)
-  return (
-    <Card className="shadow-lg border-border/50 border-dashed">
-      <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-        <MapPinned className="h-16 w-16 text-muted-foreground/40 mb-4" />
-        <h3 className="text-lg font-semibold text-foreground mb-2">Ready to Explore Goa?</h3>
-        <p className="text-muted-foreground max-w-md">
-          Fill out the form above and click "Plan My Trip" to get your personalized Goa itinerary
-        </p>
-      </CardContent>
-    </Card>
-  );
+  // Default state (no data yet)
+  return null;
 }

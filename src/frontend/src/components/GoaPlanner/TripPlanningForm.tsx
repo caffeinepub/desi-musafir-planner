@@ -46,8 +46,6 @@ export function TripPlanningForm({ formData, onFormDataChange, onSubmit, isLoadi
               <SelectItem value="3">3 Days</SelectItem>
               <SelectItem value="4">4 Days</SelectItem>
               <SelectItem value="5">5 Days</SelectItem>
-              <SelectItem value="6">6 Days</SelectItem>
-              <SelectItem value="7">7 Days</SelectItem>
             </SelectContent>
           </Select>
         </div>
