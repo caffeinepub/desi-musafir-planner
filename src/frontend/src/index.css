@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Warm Goa-inspired palette - Light mode */
+        --background: 0.98 0.01 45;
+        --foreground: 0.2 0.02 30;
+        
+        --card: 1 0 0;
+        --card-foreground: 0.2 0.02 30;
+        
+        --popover: 1 0 0;
+        --popover-foreground: 0.2 0.02 30;
+        
+        /* Coral primary (warm, beach-inspired) */
+        --primary: 0.65 0.18 25;
+        --primary-foreground: 0.98 0.01 45;
+        
+        /* Sand secondary */
+        --secondary: 0.92 0.03 60;
+        --secondary-foreground: 0.3 0.02 30;
+        
+        --muted: 0.94 0.02 50;
+        --muted-foreground: 0.5 0.02 30;
+        
+        /* Teal accent (ocean-inspired) */
+        --accent: 0.7 0.12 180;
+        --accent-foreground: 0.98 0.01 45;
+        
+        --destructive: 0.577 0.245 27.325;
+        --destructive-foreground: 0.985 0 0;
+        
+        --border: 0.88 0.02 50;
+        --input: 0.88 0.02 50;
+        --ring: 0.65 0.18 25;
+        
+        /* Custom colors for Goa theme */
+        --coral-50: 0.97 0.05 25;
+        --coral-600: 0.65 0.18 25;
+        --coral-700: 0.55 0.16 25;
+        
+        --sand-50: 0.96 0.03 60;
+        
+        --teal-600: 0.6 0.12 180;
+        
+        --chart-1: 0.65 0.18 25;
+        --chart-2: 0.7 0.12 180;
+        --chart-3: 0.75 0.15 45;
+        --chart-4: 0.68 0.14 200;
+        --chart-5: 0.72 0.16 30;
+    }
+
+    .dark {
+        --background: 0.18 0.02 30;
+        --foreground: 0.95 0.01 45;
+        
+        --card: 0.22 0.02 30;
+        --card-foreground: 0.95 0.01 45;
+        
+        --popover: 0.2 0.02 30;
+        --popover-foreground: 0.95 0.01 45;
+        
+        /* Coral primary - adjusted for dark mode */
+        --primary: 0.7 0.16 25;
+        --primary-foreground: 0.15 0.02 30;
+        
+        --secondary: 0.28 0.02 40;
+        --secondary-foreground: 0.95 0.01 45;
+        
+        --muted: 0.3 0.02 35;
+        --muted-foreground: 0.65 0.02 40;
+        
+        /* Teal accent - adjusted for dark mode */
+        --accent: 0.65 0.12 180;
+        --accent-foreground: 0.95 0.01 45;
+        
+        --destructive: 0.704 0.191 22.216;
+        --destructive-foreground: 0.95 0.01 45;
+        
+        --border: 0.35 0.02 35;
+        --input: 0.35 0.02 35;
+        --ring: 0.7 0.16 25;
+        
+        /* Custom colors for dark mode */
+        --coral-50: 0.25 0.04 25;
+        --coral-600: 0.7 0.16 25;
+        --coral-700: 0.75 0.18 25;
+        
+        --sand-50: 0.24 0.02 50;
+        
+        --teal-600: 0.65 0.12 180;
+        
+        --chart-1: 0.7 0.16 25;
+        --chart-2: 0.65 0.12 180;
+        --chart-3: 0.75 0.15 45;
+        --chart-4: 0.68 0.14 200;
+        --chart-5: 0.72 0.16 30;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+
+@layer utilities {
+    .text-coral-600 {
+        color: oklch(var(--coral-600));
+    }
+    
+    .text-coral-700 {
+        color: oklch(var(--coral-700));
+    }
+    
+    .text-teal-600 {
+        color: oklch(var(--teal-600));
+    }
+    
+    .bg-coral-600 {
+        background-color: oklch(var(--coral-600));
+    }
+    
+    .bg-coral-700 {
+        background-color: oklch(var(--coral-700));
+    }
+    
+    .bg-teal-600 {
+        background-color: oklch(var(--teal-600));
+    }
+    
+    .bg-sand-50 {
+        background-color: oklch(var(--sand-50));
+    }
+    
+    .bg-coral-50 {
+        background-color: oklch(var(--coral-50));
+    }
+    
+    .from-sand-50 {
+        --tw-gradient-from: oklch(var(--sand-50));
+        --tw-gradient-to: oklch(var(--sand-50) / 0);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    }
+    
+    .to-coral-50 {
+        --tw-gradient-to: oklch(var(--coral-50));
+    }
+    
+    .via-background {
+        --tw-gradient-to: oklch(var(--background) / 0);
+        --tw-gradient-stops: var(--tw-gradient-from), oklch(var(--background)), var(--tw-gradient-to);
+    }
+    
+    .hover\:bg-coral-700:hover {
+        background-color: oklch(var(--coral-700));
+    }
+    
+    .hover\:text-coral-600:hover {
+        color: oklch(var(--coral-600));
+    }
+    
+    .hover\:text-coral-800:hover {
+        color: oklch(0.5 0.18 25);
+    }
+}

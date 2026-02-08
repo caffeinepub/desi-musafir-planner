@@ -1,0 +1,98 @@
+{
+  "kind": "build_request",
+  "title": "Reset to last working version and enforce Mock Data + WhatsApp dummy number",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "text": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "The deployment failed because of the safety flag.\n\nPlease RESET the code to the last working version."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Project builds and deploys without triggering a safety-flag failure.",
+        "Core app screen (“Desi Musafir - Goa Planner” landing page with form + results section) still renders after the reset."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Ensure the app uses Mock Data (Simulation Mode) so clicking “Plan My Trip” works instantly without calling the backend canister and without backend-related errors.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "1. Use \"Mock Data\" (Simulation Mode) so the app works instantly without backend errors."
+        ]
+      },
+      "acceptanceCriteria": [
+        "On a fresh load, Mock Mode is enabled by default.",
+        "When Mock Mode is enabled, clicking “Plan My Trip” does not call the backend and returns the hardcoded sample itinerary.",
+        "No backend/canister errors are shown to the user while Mock Mode is enabled."
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button links to the dummy number 919999999999 (URL must be exactly `https://wa.me/919999999999`).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "2. For the WhatsApp button, just use this dummy number: 919999999999."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The “Book Now on WhatsApp” button navigates to `https://wa.me/919999999999`.",
+        "No other WhatsApp number is used anywhere in the UI for this CTA."
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Make sure the “Recommended Transport” highlighted card is visible in the itinerary results when using Mock Data (Simulation Mode) by ensuring the mock itinerary content includes a parsable “Recommended Transport” section and the results renderer displays it.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "3. Make sure the \"Recommended Transport\" card is visible."
+        ]
+      },
+      "acceptanceCriteria": [
+        "After clicking “Plan My Trip” in Mock Mode, the highlighted transport card renders with the title text “⭐ Recommended: Rent from Desi Musafir Rentals”.",
+        "The transport card is shown above the Day-wise Plan section in the results view."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend files under `frontend/src/components/ui` and identity/actor hooks listed as immutable must not be edited directly; compose them instead.",
+    "Respect the single-actor Motoko backend architecture; only add a migration file if state upgrades are required."
+  ],
+  "nonGoals": [
+    "Implementing real backend itinerary generation or external API integrations.",
+    "Adding new product features beyond restoring deployability and enforcing Mock Data + WhatsApp dummy number behavior."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

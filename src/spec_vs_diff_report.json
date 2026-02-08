@@ -1,0 +1,45 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T19:11:42.549Z",
+  "summary": "Implemented default Mock/Simulation Mode via a dedicated mock mutation hook and a UI toggle; added a single-source WhatsApp URL constant set to the requested dummy number; updated itinerary parsing to recognize a \"Recommended Transport\" section and to avoid duplicating the star-title line. However, the diff summary does not provide enough evidence that the deployment safety-flag issue was addressed or that the transport card renders with the exact required title and placement.",
+  "missing_requirements": [
+    {
+      "id": "REQ-18",
+      "requirement": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
+      "reason": "The diff summary only shows frontend changes (mock mode, WhatsApp constant, parsing tweaks). There is no evidence of reverting/undoing the changes that caused the platform safety-flag deployment failure or any build/deploy related fixes.",
+      "evidence": [
+        "file-diff summary shows only frontend additions/modifications: frontend/src/components/GoaPlanner/*.tsx, frontend/src/hooks/useMockPlanTrip.ts, frontend/src/constants/whatsapp.ts"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "requirement": "Ensure no other WhatsApp number is used anywhere in the UI for the “Book Now on WhatsApp” CTA (URL must be exactly https://wa.me/919999999999).",
+      "reason": "A constant is added with the correct URL and ItineraryResults imports it, but the diff summary does not prove that no other CTA instances elsewhere in the UI still hardcode a different number.",
+      "evidence": [
+        "frontend/src/constants/whatsapp.ts",
+        "frontend/src/components/GoaPlanner/ItineraryResults.tsx (imports WHATSAPP_URL)"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "requirement": "Highlighted transport card renders with title text “⭐ Recommended: Rent from Desi Musafir Rentals” and is shown above the Day-wise Plan section in the results view when using Mock Data.",
+      "reason": "The diff summary indicates parsing for “Recommended Transport” and mentions a highlighted transport card in the file summary, but the provided truncated code does not show the rendered card title text nor confirm it is positioned above the Day-wise Plan section.",
+      "evidence": [
+        "frontend/src/components/GoaPlanner/ItineraryResults.tsx (truncated)",
+        "frontend-file-summaries.txt (describes transport card + parser behavior)",
+        "frontend/src/mock/sampleItinerary.ts (mentioned to include star-title line)"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.56,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+    "frontend/src/components/GoaPlanner/LandingPage.tsx",
+    "frontend/src/constants/whatsapp.ts",
+    "frontend/src/hooks/useMockPlanTrip.ts",
+    "project_state.json"
+  ]
+}

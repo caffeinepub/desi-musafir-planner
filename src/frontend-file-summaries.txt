@@ -1,0 +1,12 @@
+{
+  "frontend/src/App.tsx": "Main application entry point that renders the LandingPage component for the Desi Musafir Planner.",
+  "frontend/src/components/GoaPlanner/LandingPage.tsx": "Main landing page with Mock Mode enabled by default; conditionally uses mock or real backend mutation based on toggle state, and ensures no backend errors are shown when Mock Mode is active.",
+  "frontend/src/components/GoaPlanner/TripPlanningForm.tsx": "Trip planning form component with duration dropdown (1-7 days), budget toggle buttons (Low/Medium/High), travel type dropdown (Family/Couple/Friends/Solo), location toggle buttons (North/South/Both), and \"Plan My Trip\" submit button with loading state.",
+  "frontend/src/components/GoaPlanner/ItineraryResults.tsx": "Results display component that renders itinerary data with a highlighted yellow-bordered transport card featuring a green WhatsApp CTA button (using the shared constant), timeline-style day-by-day plan with emoji-labeled time-of-day entries, and clickable food spot chips; parser now skips the star-title line to prevent duplication in transport details.",
+  "frontend/src/hooks/usePlanTrip.ts": "React Query mutation hook that converts UI form data to backend TripForm format (with bigint conversions and budget mapping) and calls actor.planTrip to retrieve the full itinerary string from the backend.",
+  "frontend/src/index.css": "Global styles with warm Goa-inspired OKLCH color palette (coral, sand, teal) for both light and dark modes, avoiding blue/purple as primary colors.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with custom Goa-themed colors (coral, sand, teal), Inter font family, and design tokens for consistent theming.",
+  "frontend/src/mock/sampleItinerary.ts": "Exports a hardcoded English 3-day Goa itinerary string with Day-wise Plan (Morning/Afternoon/Evening activities), Food Spots list, and Recommended Transport section including Desi Musafir Rentals details with the star-title line.",
+  "frontend/src/hooks/useMockPlanTrip.ts": "React Query mutation hook that returns the hardcoded sample itinerary after a brief simulated delay without calling the backend actor, enabling Mock Mode functionality.",
+  "frontend/src/constants/whatsapp.ts": "Single source of truth constant for the WhatsApp contact URL (https://wa.me/919999999999)."
+}

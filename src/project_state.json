@@ -1,0 +1,218 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 13,
+  "summary": "Build a modern, mobile-responsive web UI for the Desi Musafir Planner (Goa) and support a Mock/Simulation Mode that stops calling the real backend when it’s down, using hardcoded dummy itinerary data to immediately render a full 3-day sample result (transport card + WhatsApp CTA, emoji timeline, and food-spot tags) for UI verification. Use WhatsApp dummy number 919999999999 for the CTA link.",
+  "architectural_notes": [
+    "Implement as a standalone HTML/CSS/JS page (no framework required) with responsive layout and a dedicated results section for rendering itinerary output.",
+    "Replace simulated placeholder output with a real itinerary generation call (OpenAI API) or a deterministic mock; parse/structure the response to render day-wise plan, food spots, and “Recommended Transport (Desi Musafir Rentals)” in the results section.",
+    "Enhance results rendering to be more app-like: transport as a highlighted gold/yellow bordered card with title \"⭐ Recommended: Rent from Desi Musafir Rentals\" and a green CTA button \"Book Now on WhatsApp\" (placeholder link https://wa.me/919999999999); itinerary as a day-wise timeline using emojis for Morning/Afternoon/Evening; food spots as clickable tags/chips.",
+    "Support a Mock/Simulation Mode that bypasses the Internet Computer backend/API calls and returns hardcoded sample itinerary data on “Plan My Trip” for UI testing when the canister is down.",
+    "WhatsApp CTA: use dummy number 919999999999 (wa.me/919999999999) for the \"Book Now on WhatsApp\" button; ensure the \"⭐ Recommended: Rent from Desi Musafir Rentals\" transport card is visibly rendered in results when using Mock Data."
+  ],
+  "known_issues": [
+    "Current UI only displays a simulated placeholder message (“backend will soon generate...”) instead of a real, detailed itinerary.",
+    "Results section content currently feels too simple/static; transport, itinerary, and food spots need more interactive, professional UI components (highlighted transport card + WhatsApp CTA, timeline, and clickable chips).",
+    "Backend canister may be stopped (“Canister stopped” error), causing the current Plan My Trip flow to fail; need a mock/static-data fallback mode to verify UI without backend availability.",
+    "Deployment is currently failing due to a safety flag; user requested resetting code to the last working version and rebuilding."
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-build-a-mobile-responsive-landing-page-ui-for-desi-musafir-goa-planner-with-a-prominent-header-that-displays-the-exact-title-text-desi-musafir-goa-planner",
+      "title": "Build a mobile-responsive landing page UI for “Desi Musafir - Goa Planner” with a prominent header that displays the exact title text: “Desi Musafir - Goa Planner”.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-clean-trip-planning-form-that-collects-the-following-inputs-and-keeps-them-in-react-state-duration-dropdown-with-options-1-7-days-budget-segmented-buttons-low-medium-high-travel-type-dropdown-family-couple-friends-solo-and-location-segmented-buttons-north-south-both",
+      "title": "Implement a clean trip-planning form that collects the following inputs and keeps them in React state: Duration (dropdown with options 1–7 days), Budget (segmented buttons: Low/Medium/High), Travel Type (dropdown: Family/Couple/Friends/Solo), and Location (segmented buttons: North/South/Both).",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-primary-call-to-action-button-labeled-exactly-plan-my-trip-that-triggers-itinerary-generation-using-the-currently-selected-form-values",
+      "title": "Add a primary call-to-action button labeled exactly “Plan My Trip” that triggers itinerary generation using the currently selected form values.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-connect-the-plan-my-trip-action-to-the-existing-trip-planning-logic-internet-computer-backend-actor-using-the-app-s-existing-actor-identity-hooks-and-display-loading-and-error-states-in-the-ui",
+      "title": "Connect the “Plan My Trip” action to the existing trip-planning logic (Internet Computer backend actor) using the app’s existing actor/identity hooks, and display loading and error states in the UI.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-results-section-below-the-form-that-renders-the-returned-itinerary-in-a-readable-nicely-formatted-layout-e-g-day-by-day-cards-sections-and-remains-empty-or-shows-a-helpful-placeholder-before-the-first-plan-is-generated",
+      "title": "Create a results section below the form that renders the returned itinerary in a readable, nicely formatted layout (e.g., day-by-day cards/sections) and remains empty or shows a helpful placeholder before the first plan is generated.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-modern-visual-theme-appropriate-for-a-goa-travel-planner-and-enforce-it-consistently-across-header-form-buttons-and-results-typography-spacing-colors-component-styling-avoid-blue-purple-as-the-primary-palette",
+      "title": "Apply a coherent, modern visual theme appropriate for a Goa travel planner and enforce it consistently across header, form, buttons, and results (typography, spacing, colors, component styling). Avoid blue/purple as the primary palette.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-trip-planning-mutation-frontend-src-hooks-useplantrip-ts-to-call-the-updated-backend-plantrip-method-with-the-current-form-values-and-to-use-the-backend-returned-itinerary-as-the-mutation-result-remove-the-hardcoded-simulation-message",
+      "title": "Update the frontend trip-planning mutation (`frontend/src/hooks/usePlanTrip.ts`) to call the updated backend `planTrip` method with the current form values and to use the backend-returned itinerary as the mutation result (remove the hardcoded simulation message).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-results-ui-frontend-src-components-goaplanner-itineraryresults-tsx-to-render-the-returned-itinerary-clearly-below-the-form-button-including-explicit-display-for-day-wise-plan-food-spots-and-the-recommended-transport-desi-musafir-rentals-section-do-not-show-the-pre-plan-placeholder-once-a-successful-itinerary-has-been-returned",
+      "title": "Update the results UI (`frontend/src/components/GoaPlanner/ItineraryResults.tsx`) to render the returned itinerary clearly below the form/button, including explicit display for: day-wise plan, food spots, and the \"Recommended Transport (Desi Musafir Rentals)\" section (do not show the pre-plan placeholder once a successful itinerary has been returned).",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-recommended-transport-section-in-frontend-src-components-goaplanner-itineraryresults-tsx-to-render-as-a-highlighted-card-not-a-simple-bulleted-list-with-a-yellow-gold-border-showing-the-exact-title-text-recommended-rent-from-desi-musafir-rentals-and-a-clearly-visible-green-button-labeled-exactly-book-now-on-whatsapp-that-links-to-https-wa-me-919999999999",
+      "title": "Update the Recommended Transport section in `frontend/src/components/GoaPlanner/ItineraryResults.tsx` to render as a highlighted card (not a simple bulleted list) with a yellow/gold border, showing the exact title text: \"⭐ Recommended: Rent from Desi Musafir Rentals\" and a clearly visible green button labeled exactly \"Book Now on WhatsApp\" that links to `https://wa.me/919999999999`.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-day-wise-plan-rendering-in-frontend-src-components-goaplanner-itineraryresults-tsx-to-use-a-timeline-style-layout-for-day-1-day-2-etc-and-visually-label-morning-afternoon-evening-items-with-emojis-morning-afternoon-evening-to-make-the-itinerary-feel-more-interactive-and-app-like",
+      "title": "Update the Day-wise Plan rendering in `frontend/src/components/GoaPlanner/ItineraryResults.tsx` to use a timeline-style layout for Day 1, Day 2, etc., and visually label morning/afternoon/evening items with emojis (Morning, Afternoon, Evening) to make the itinerary feel more interactive and app-like.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-food-spots-section-in-frontend-src-components-goaplanner-itineraryresults-tsx-to-display-food-spots-as-clickable-tags-chips-not-a-plain-list-with-clear-hover-focus-states-so-they-feel-interactive-and-professional",
+      "title": "Update the Food Spots section in `frontend/src/components/GoaPlanner/ItineraryResults.tsx` to display food spots as clickable tags/chips (not a plain list), with clear hover/focus states so they feel interactive and professional.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-frontend-mock-mode-simulation-mode-for-the-plan-my-trip-flow-that-completely-stops-calling-the-real-backend-canister-api-to-avoid-the-canister-stopped-crash-and-instead-returns-hardcoded-dummy-itinerary-data",
+      "title": "Implement a frontend “Mock Mode” (Simulation Mode) for the Plan My Trip flow that completely stops calling the real backend canister/API to avoid the “Canister stopped” crash, and instead returns hardcoded dummy itinerary data.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-hardcoded-sample-itinerary-result-english-text-that-renders-immediately-after-clicking-plan-my-trip-in-mock-mode-and-is-compatible-with-the-existing-itinerary-parser-renderer-sections-for-day-wise-plan-food-spots-and-recommended-transport-the-sample-must-include-a-3-day-itinerary-with-morning-afternoon-evening-wording-so-the-existing-emoji-labeling-appears",
+      "title": "Add a hardcoded sample itinerary result (English text) that renders immediately after clicking “Plan My Trip” in Mock Mode and is compatible with the existing itinerary parser/renderer (sections for “Day-wise Plan”, “Food Spots”, and “Recommended Transport”). The sample must include a 3-day itinerary with morning/afternoon/evening wording so the existing emoji labeling appears.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-non-mock-mode-keep-the-current-backend-integration-behavior-but-add-a-safe-fallback-if-the-backend-call-fails-with-a-canister-down-style-error-automatically-use-the-same-hardcoded-dummy-itinerary-so-the-ui-can-still-be-verified-instead-of-showing-an-error-screen",
+      "title": "In non-mock mode, keep the current backend integration behavior, but add a safe fallback: if the backend call fails with a canister-down style error, automatically use the same hardcoded dummy itinerary so the UI can still be verified instead of showing an error screen.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-green-book-now-on-whatsapp-button-in-the-recommended-rent-from-desi-musafir-rentals-card-to-open-whatsapp-chat-for-the-dummy-number-917861015148-and-prefill-the-message-text-exactly-hello-desi-musafir-i-saw-your-travel-plan-and-want-to-book-a-vehicle",
+      "title": "Update the green \"Book Now on WhatsApp\" button in the \"⭐ Recommended: Rent from Desi Musafir Rentals\" card to open WhatsApp chat for the dummy number 917861015148 and prefill the message text exactly: \"Hello Desi Musafir, I saw your travel plan and want to book a vehicle.\"",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-reset-the-codebase-to-the-last-known-working-version-that-successfully-deploys-remove-undo-any-recent-changes-that-trigger-the-platform-safety-flag-deployment-failure-while-keeping-the-current-goa-planner-ui-intact",
+      "title": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-app-uses-mock-data-simulation-mode-so-clicking-plan-my-trip-works-instantly-without-calling-the-backend-canister-and-without-backend-related-errors",
+      "title": "Ensure the app uses Mock Data (Simulation Mode) so clicking “Plan My Trip” works instantly without calling the backend canister and without backend-related errors.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-whatsapp-cta-so-the-book-now-on-whatsapp-button-links-to-the-dummy-number-919999999999-url-must-be-exactly-https-wa-me-919999999999",
+      "title": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button links to the dummy number 919999999999 (URL must be exactly `https://wa.me/919999999999`).",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-sure-the-recommended-transport-highlighted-card-is-visible-in-the-itinerary-results-when-using-mock-data-simulation-mode-by-ensuring-the-mock-itinerary-content-includes-a-parsable-recommended-transport-section-and-the-results-renderer-displays-it",
+      "title": "Make sure the “Recommended Transport” highlighted card is visible in the itinerary results when using Mock Data (Simulation Mode) by ensuring the mock itinerary content includes a parsable “Recommended Transport” section and the results renderer displays it.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a modern, mobile-responsive UI for 'Desi Musafir - Goa Planner' with header, form inputs (duration, budget, travel type, location), a 'Plan My Trip' button, and an itinerary results display section using HTML/CSS/JS.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Connect “Plan My Trip” to real itinerary generation via OpenAI API (or a mock returning a full detailed itinerary) and render day-wise plan, food spots, and a clearly labeled “Recommended Transport (Desi Musafir Rentals)” section below the button, replacing the placeholder message.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Update the backend `planTrip` API to accept the trip form inputs (duration, budget, travelType, location) and return a full detailed itinerary payload (at minimum a string) instead of returning `()` so the frontend can display real content rather than the simulation message.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Implement itinerary generation logic in the backend using a mock generator (allowed by the request) that returns a FULL detailed itinerary including: (a) day-wise plan for each day, (b) food spots, and (c) a clearly labeled section: \"Recommended Transport (Desi Musafir Rentals)\".",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Revamp the Results Section UI to feel like a real app: show \"Recommended Transport\" as a highlighted gold/yellow bordered card titled \"⭐ Recommended: Rent from Desi Musafir Rentals\" with a green \"Book Now on WhatsApp\" button linking to a placeholder wa.me URL; render itinerary as a Day 1/Day 2 timeline with morning/afternoon/evening emoji markers; display food spots as clickable tags/chips.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add a Mock/Simulation Mode that disables real backend/API calls and uses hardcoded dummy data on “Plan My Trip” to immediately render a sample 3-day itinerary (with emojis), the highlighted “Recommended Transport (Desi Musafir Rentals)” card + WhatsApp button, and food spots as tags, to avoid canister-down crashes while verifying UI.",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Desi Musafir Planner",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,80 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T19:11:42.552Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 4,
+    "items": [
+      {
+        "id": "REQ-18",
+        "summary": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+          "frontend/src/components/GoaPlanner/LandingPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+          "frontend/src/components/GoaPlanner/LandingPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Ensure the app uses Mock Data (Simulation Mode) so clicking “Plan My Trip” works instantly without calling the backend canister and without backend-related errors.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/GoaPlanner/LandingPage.tsx",
+          "frontend/src/hooks/useMockPlanTrip.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GoaPlanner/LandingPage.tsx",
+          "frontend/src/hooks/useMockPlanTrip.ts"
+        ]
+      },
+      {
+        "id": "REQ-20",
+        "summary": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button links to the dummy number 919999999999 (URL must be exactly `https://wa.me/919999999999`).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/constants/whatsapp.ts",
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/constants/whatsapp.ts",
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx"
+        ]
+      },
+      {
+        "id": "REQ-21",
+        "summary": "Make sure the “Recommended Transport” highlighted card is visible in the itinerary results when using Mock Data (Simulation Mode) by ensuring the mock itinerary content includes a parsable “Recommended Transport” section and the results renderer displays it.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/mock/sampleItinerary.ts",
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/GoaPlanner/ItineraryResults.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+    "frontend/src/components/GoaPlanner/LandingPage.tsx",
+    "frontend/src/constants/whatsapp.ts",
+    "frontend/src/hooks/useMockPlanTrip.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

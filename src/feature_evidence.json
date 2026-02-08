@@ -1,0 +1,80 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-reset-the-codebase-to-the-last-known-working-version-that-successfully-deploys-remove-undo-any-recent-changes-that-trigger-the-platform-safety-flag-deployment-failure-while-keeping-the-current-goa-planner-ui-intact",
+      "featureTitle": "Reset the codebase to the last known working version that successfully deploys (remove/undo any recent changes that trigger the platform safety-flag deployment failure) while keeping the current Goa Planner UI intact.",
+      "files": [
+        "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+        "frontend/src/components/GoaPlanner/LandingPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-app-uses-mock-data-simulation-mode-so-clicking-plan-my-trip-works-instantly-without-calling-the-backend-canister-and-without-backend-related-errors",
+      "featureTitle": "Ensure the app uses Mock Data (Simulation Mode) so clicking “Plan My Trip” works instantly without calling the backend canister and without backend-related errors.",
+      "files": [
+        "frontend/src/components/GoaPlanner/LandingPage.tsx",
+        "frontend/src/hooks/useMockPlanTrip.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-whatsapp-cta-so-the-book-now-on-whatsapp-button-links-to-the-dummy-number-919999999999-url-must-be-exactly-https-wa-me-919999999999",
+      "featureTitle": "Update the WhatsApp CTA so the “Book Now on WhatsApp” button links to the dummy number 919999999999 (URL must be exactly `https://wa.me/919999999999`).",
+      "files": [
+        "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+        "frontend/src/constants/whatsapp.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-make-sure-the-recommended-transport-highlighted-card-is-visible-in-the-itinerary-results-when-using-mock-data-simulation-mode-by-ensuring-the-mock-itinerary-content-includes-a-parsable-recommended-transport-section-and-the-results-renderer-displays-it",
+      "featureTitle": "Make sure the “Recommended Transport” highlighted card is visible in the itinerary results when using Mock Data (Simulation Mode) by ensuring the mock itinerary content includes a parsable “Recommended Transport” section and the results renderer displays it.",
+      "files": [
+        "frontend/src/components/GoaPlanner/ItineraryResults.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

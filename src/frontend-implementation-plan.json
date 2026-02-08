@@ -1,0 +1,88 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Restore deployability while enforcing Mock Mode and WhatsApp dummy CTA",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "summary": "Revert/neutralize recent frontend changes likely causing safety-flag deployment failure while keeping the current Goa Planner UI intact.",
+      "acceptanceCriteria": [
+        "Project builds and deploys without triggering a safety-flag failure.",
+        "Core app screen (“Desi Musafir - Goa Planner” landing page with form + results section) still renders after the reset."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+          "operation": "modify",
+          "description": "Remove non-essential debug behavior and tighten UI-only interactions to reduce risk of deployment safety-flag triggers while keeping the existing results UI intact (e.g., replace the Food Spots click handler console logging with a no-op or safe placeholder). Uses shadcn-ui Card/Alert/Button already present—Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/GoaPlanner/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Simplify and correct the derived error/success state wiring passed into results so the UI renders consistently after reset (ensure Mock Mode never surfaces backend/canister errors to the user). Uses shadcn-ui Switch/Label already present—Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Ensure Mock Data (Simulation Mode) is enabled by default and bypasses backend calls and backend error UI when planning a trip.",
+      "acceptanceCriteria": [
+        "On a fresh load, Mock Mode is enabled by default.",
+        "When Mock Mode is enabled, clicking “Plan My Trip” does not call the backend and returns the hardcoded sample itinerary.",
+        "No backend/canister errors are shown to the user while Mock Mode is enabled."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/GoaPlanner/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Enforce Mock Mode as the default and ensure the submit flow exclusively triggers the mock mutation when Mock Mode is enabled; also ensure the results props never enter an error state in Mock Mode (so backend/canister errors cannot render). Uses shadcn-ui Switch/Label already present—Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useMockPlanTrip.ts",
+          "operation": "modify",
+          "description": "Keep the mock planner mutation strictly local/instant (no backend usage) and ensure it always returns the hardcoded sample itinerary used by the UI."
+        }
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "summary": "Update the WhatsApp CTA to always link to the dummy number 919999999999.",
+      "acceptanceCriteria": [
+        "The “Book Now on WhatsApp” button navigates to `https://wa.me/919999999999`.",
+        "No other WhatsApp number is used anywhere in the UI for this CTA."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/constants/whatsapp.ts",
+          "operation": "create",
+          "description": "Create a single source-of-truth constant for the WhatsApp wa.me URL (must be exactly https://wa.me/919999999999) to prevent accidental divergence across the UI."
+        },
+        {
+          "path": "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+          "operation": "modify",
+          "description": "Wire the “Book Now on WhatsApp” button to the shared WhatsApp URL constant (ensuring the href is exactly https://wa.me/919999999999). Uses shadcn-ui Button/Card already present—Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "summary": "Ensure the mock itinerary includes a parsable Recommended Transport section and that the highlighted transport card renders above the Day-wise Plan in results.",
+      "acceptanceCriteria": [
+        "After clicking “Plan My Trip” in Mock Mode, the highlighted transport card renders with the title text “⭐ Recommended: Rent from Desi Musafir Rentals”.",
+        "The transport card is shown above the Day-wise Plan section in the results view."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/mock/sampleItinerary.ts",
+          "operation": "modify",
+          "description": "Ensure the hardcoded mock itinerary contains a clearly delimited “Recommended Transport” section with parse-friendly lines intended to populate the transport card content (while preserving the current card title expectation)."
+        },
+        {
+          "path": "frontend/src/components/GoaPlanner/ItineraryResults.tsx",
+          "operation": "modify",
+          "description": "Harden the itinerary parser so “Recommended Transport” content is reliably extracted in Mock Mode and displayed in the highlighted transport card; ensure only the transport details populate the bullet list (avoid duplicating the star-title line in the list) and keep the card rendered above the Day-wise Plan section. Uses shadcn-ui Card/Button/Separator already present—Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

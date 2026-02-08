@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Motoko canister that generates mock trip itineraries by building day plans, food spots, and transport details, returning a formatted itinerary string.",
+  "feature_evidence.json": "Feature evidence report mapping feature IDs to affected files, components, tests, and confidence levels.",
+  "frontend-file-summaries.txt": "Prewritten summaries describing the purpose of key frontend files and components in the Goa Planner app.",
+  "frontend/index.css": "Global Tailwind-based stylesheet defining theme variables and color tokens for light and dark modes.",
+  "frontend/index.html": "Base HTML template that loads the React application via main.tsx.",
+  "frontend/src/App.tsx": "Main React entry component that renders the LandingPage.",
+  "frontend/src/components/GoaPlanner/ItineraryResults.tsx": "Parses itinerary text into sections and renders days, food spots, transport card, and WhatsApp CTA with loading and error states.",
+  "frontend/src/components/GoaPlanner/LandingPage.tsx": "Top-level planner page handling form state, mock mode toggle, and selecting mock or real trip-planning mutations.",
+  "frontend/src/components/GoaPlanner/TripPlanningForm.tsx": "UI form for selecting trip duration, budget, travel type, and location before submitting a trip-planning request.",
+  "frontend/src/constants/whatsapp.ts": "Exports the fixed WhatsApp contact URL used by the CTA button.",
+  "frontend/src/hooks/useActor.ts": "Initializes and caches a backend actor based on the current Internet Identity, recreating it on identity change and invalidating dependent queries.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides Internet Identity authentication context, handling login, logout, identity loading, and status tracking via AuthClient.",
+  "frontend/src/hooks/useMockPlanTrip.ts": "Defines a mock mutation that waits briefly and returns a hardcoded sample itinerary without calling the backend.",
+  "frontend/src/hooks/usePlanTrip.ts": "Calls the backend actor’s planTrip method, mapping UI form data to backend format and returning the generated itinerary.",
+  "frontend/src/index.css": "Sets up Tailwind base styles and custom Goa-themed color variables for light and dark modes with utility classes.",
+  "frontend/src/main.tsx": "Bootstraps the app by mounting React, providing QueryClient and Internet Identity context, and loading global styles.",
+  "frontend/src/mock/sampleItinerary.ts": "Exports a multiline hardcoded sample 3‑day Goa itinerary used for mock mode or fallback.",
+  "frontend/tailwind.config.js": "Configures Tailwind with custom colors, typography, container settings, animations, and theme extensions for the Goa UI.",
+  "project_state.json": "Stores project metadata, goals, issues, and requirements for building a responsive Goa trip planner with mock fallback mode."
+}
